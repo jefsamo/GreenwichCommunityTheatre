@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GreenwichCommunityTheatre.Domain.Entities
+﻿namespace GreenwichCommunityTheatre.Domain.Entities
 {
     public class Play : BaseEntity
     {
@@ -16,5 +8,7 @@ namespace GreenwichCommunityTheatre.Domain.Entities
         public required DateTimeOffset Time { get; set; }
         public required int TotalSeats { get; set; } = 100;
         public required int AvailableSeats { get; set; }
+        public ICollection<Review> Reviews { get; set;} = new List<Review>();
+        public ICollection<Ticket> Tickets { get; set;} = new List<Ticket>();
     }
 }

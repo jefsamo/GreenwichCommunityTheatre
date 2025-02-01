@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GreenwichCommunityTheatre.Domain.Entities
+﻿namespace GreenwichCommunityTheatre.Domain.Entities
 {
     public class Seat : BaseEntity
     {
