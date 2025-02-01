@@ -1,0 +1,6 @@
+@GreenwichCommunityTheatre_HostAddress = http://localhost:5265
+
+GET {{GreenwichCommunityTheatre_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
