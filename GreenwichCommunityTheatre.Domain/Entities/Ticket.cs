@@ -9,7 +9,7 @@ namespace GreenwichCommunityTheatre.Domain.Entities
         public required string PlayId { get; set; }
         public required string SeatId { get; set; }
         public required string CustomerName { get; set; }
-        public required int Age { get; set; }
+        public required DateOnly DateOfBirth { get; set; }
 
         [ForeignKey("ReservationId")]
         public Reservation? Reservation { get; set; }
