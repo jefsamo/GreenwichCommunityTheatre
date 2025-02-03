@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GreenwichCommunityTheatre.Domain.Entities
 {
-    public class User : IdentityUser<int>
+    public class User : IdentityUser<string>
     {
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
