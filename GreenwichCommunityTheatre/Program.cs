@@ -1,6 +1,10 @@
 using GreenwichCommunityTheatre.Extensions;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, services, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services));
 
 // Add services to the container.
 
