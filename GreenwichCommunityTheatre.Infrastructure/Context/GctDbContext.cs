@@ -33,6 +33,8 @@ namespace GreenwichCommunityTheatre.Infrastructure.Context
             modelBuilder.Entity<Reservation>().HasMany(r => r.Tickets).WithOne(r => r.Reservation).HasForeignKey(r => r.ReservationId).IsRequired();
             modelBuilder.Entity<Reservation>().HasOne(r => r.Shipment).WithOne(s => s.Reservation).HasForeignKey<Shipment>(s => s.ReservationId).IsRequired();
 
+            modelBuilder.Entity<Seat>().HasMany(r => r.Tickets).WithOne(r => r.Seat).HasForeignKey(r => r.SeatId).IsRequired();
+
             modelBuilder.Entity<Play>().HasMany(p => p.Tickets).WithOne(p => p.Play).HasForeignKey(p => p.PlayId).IsRequired();
             modelBuilder.Entity<Play>().HasMany(p => p.Reviews).WithOne(p => p.Play).HasForeignKey(p => p.PlayId).IsRequired();
         }

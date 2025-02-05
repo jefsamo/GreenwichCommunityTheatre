@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GreenwichCommunityTheatre.Infrastructure.Migrations
 {
     [DbContext(typeof(GctDbContext))]
-    [Migration("20250202204740_InitialMigration")]
+    [Migration("20250205100747_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -488,7 +488,7 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("GreenwichCommunityTheatre.Domain.Entities.Seat", "Seat")
-                        .WithMany()
+                        .WithMany("Tickets")
                         .HasForeignKey("SeatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -563,6 +563,11 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
                     b.Navigation("Shipment")
                         .IsRequired();
 
+                    b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("GreenwichCommunityTheatre.Domain.Entities.Seat", b =>
+                {
                     b.Navigation("Tickets");
                 });
 
