@@ -485,7 +485,7 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("GreenwichCommunityTheatre.Domain.Entities.Seat", "Seat")
-                        .WithMany()
+                        .WithMany("Tickets")
                         .HasForeignKey("SeatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -560,6 +560,11 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
                     b.Navigation("Shipment")
                         .IsRequired();
 
+                    b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("GreenwichCommunityTheatre.Domain.Entities.Seat", b =>
+                {
                     b.Navigation("Tickets");
                 });
 
