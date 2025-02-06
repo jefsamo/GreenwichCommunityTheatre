@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GreenwichCommunityTheatre.Infrastructure.Context
 {
-    public class GctDbContext : IdentityDbContext<User, Role, string>
+    public class GctDbContext : IdentityDbContext<User, Role, Guid>
     {
 
         public GctDbContext(DbContextOptions<GctDbContext> options) : base(options)

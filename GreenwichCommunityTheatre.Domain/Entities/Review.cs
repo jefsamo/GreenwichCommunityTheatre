@@ -6,7 +6,7 @@ namespace GreenwichCommunityTheatre.Domain.Entities
     {
         public required int Rating { get; set; }
         public required string PlayId { get; set; }
-        public required string UserId { get; set; }
+        public required Guid UserId { get; set; }
         public required string Comment { get; set; }
 
         [ForeignKey("PlayId")]
