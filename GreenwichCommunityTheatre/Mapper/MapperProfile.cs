@@ -9,6 +9,7 @@ namespace GreenwichCommunityTheatre.Mapper
         public MapperProfile()
         {
             CreateMap<User, RegisterDto>().ReverseMap();
+            CreateMap<User, RegisterResponseDto>().ReverseMap();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace GreenwichCommunityTheatre.Extensions
                 options.UseSqlServer(configuration.GetConnectionString("Default"));
             });
 
-            services.AddIdentity<User, Role>().AddEntityFrameworkStores<GctDbContext>().AddDefaultTokenProviders().AddUserStore<UserStore<User,Role,GctDbContext,string>>().AddRoleStore<RoleStore<Role, GctDbContext, string>>();
+            services.AddIdentity<User, Role>().AddEntityFrameworkStores<GctDbContext>().AddDefaultTokenProviders().AddUserStore<UserStore<User,Role,GctDbContext,Guid>>().AddRoleStore<RoleStore<Role, GctDbContext, Guid>>();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

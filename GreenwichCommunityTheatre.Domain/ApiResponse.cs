@@ -45,9 +45,9 @@
             Message = message;
         }
 
-        public static ApiResponse<T> Success(T data, string message, int statusCode)
+        public static ApiResponse<T> Success(string message, int statusCode, T data, bool isSucceeded = true)
         {
-            return new ApiResponse<T>(true, statusCode, message, data, []);
+            return new ApiResponse<T>(isSucceeded, statusCode, message, data, []);
         }
 
         public static ApiResponse<T> Failed(List<string> errors, bool isSucceeded = false)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using GreenwichCommunityTheatre.Domain.Entities.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GreenwichCommunityTheatre.Domain.Entities
 {
@@ -6,7 +7,7 @@ namespace GreenwichCommunityTheatre.Domain.Entities
     {
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
-        public required string UserId { get; set; }
+        public required Guid UserId { get; set; }
         public required string Email { get; set; }
         public bool HasPaid { get; set; } = false;
         public ShippingOption ShippingOption { get; set; } = ShippingOption.Pickup;

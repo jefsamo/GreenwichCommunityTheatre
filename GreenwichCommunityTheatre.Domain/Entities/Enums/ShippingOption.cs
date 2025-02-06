@@ -1,4 +1,4 @@
-﻿namespace GreenwichCommunityTheatre.Domain.Entities
+﻿namespace GreenwichCommunityTheatre.Domain.Entities.Enums
 {
     public enum ShippingOption
     {

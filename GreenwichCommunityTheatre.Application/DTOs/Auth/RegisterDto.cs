@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GreenwichCommunityTheatre.Domain.Entities.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace GreenwichCommunityTheatre.Application.DTOs.Auth
 {
@@ -29,5 +30,7 @@ namespace GreenwichCommunityTheatre.Application.DTOs.Auth
         [Required(ErrorMessage = "Confirm Password can't be blank")]
         [DataType(DataType.Password)]
         public required string ConfirmPassword { get; set; }
+
+        public string Role { get; set; } = UserType.Customer.ToString();
     }
 }
