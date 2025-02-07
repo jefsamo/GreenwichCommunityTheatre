@@ -25,10 +25,8 @@ namespace GreenwichCommunityTheatre.Infrastructure.Context
         {
             base.OnModelCreating(modelBuilder);
 
-
             modelBuilder.Entity<User>().HasMany(u => u.Reservations).WithOne(r => r.User).IsRequired();
             modelBuilder.Entity<User>().HasMany(u => u.Reviews).WithOne(r => r.User).IsRequired();
-
 
             modelBuilder.Entity<Reservation>().HasMany(r => r.Tickets).WithOne(r => r.Reservation).HasForeignKey(r => r.ReservationId).IsRequired();
             modelBuilder.Entity<Reservation>().HasOne(r => r.Shipment).WithOne(s => s.Reservation).HasForeignKey<Shipment>(s => s.ReservationId).IsRequired();
