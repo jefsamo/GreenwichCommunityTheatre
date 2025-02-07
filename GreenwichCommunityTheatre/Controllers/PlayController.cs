@@ -82,7 +82,7 @@ namespace GreenwichCommunityTheatre.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlayById(string id)
         {
-            var response = await _playService.UpdatePlayAsync(id, updatePlayDto);
+            var response = await _playService.DeletePlayAsync(id);
 
             if (response.Succeeded)
             {
