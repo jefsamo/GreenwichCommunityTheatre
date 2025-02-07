@@ -1,5 +1,6 @@
 ﻿using GreenwichCommunityTheatre.Application.DTOs.Auth;
 using GreenwichCommunityTheatre.Application.Services.Interfaces.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace GreenwichCommunityTheatre.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -30,7 +32,7 @@ namespace GreenwichCommunityTheatre.Controllers
             return BadRequest(response);
         }
 
-
+        [Authorize(Roles = "Operator")]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {

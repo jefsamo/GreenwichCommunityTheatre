@@ -1,5 +1,6 @@
 using GreenwichCommunityTheatre.Extensions;
 using Serilog;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,24 @@ var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == 401)
+    {
+        context.Response.ContentType = "application/json";
+        var response = new { message = "Unauthenticated", status = 401 };
+        await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+    }
+    else if (context.Response.StatusCode == 403)
+    {
+        context.Response.ContentType = "application/json";
+        var response = new { message = "You can not access this resource", status = 403 };
+        await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+    }
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -26,7 +45,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

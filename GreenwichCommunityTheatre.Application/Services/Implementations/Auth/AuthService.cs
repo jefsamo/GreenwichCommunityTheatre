@@ -17,7 +17,6 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Auth
 {
     public class AuthService : IAuthService
     {
-
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
@@ -26,7 +25,6 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Auth
         private readonly GctDbContext _gctDbContext;
         private readonly IJwtService _jwtService;
         private readonly IDiagnosticContext _diagnosticContext;
-
 
         public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, ILogger<AuthService> logger, IMapper mapper, GctDbContext gctDbContext, IJwtService jwtService, IDiagnosticContext diagnosticContext)
         {
@@ -64,7 +62,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Auth
                         Email = user.Email!,
                         FirstName = user.FirstName,
                         LastName = user.LastName,
-                        Role = userRoles.FirstOrDefault()!.Name ?? "User",
+                        Role = userRoles.FirstOrDefault()!.Name ?? "Customer",
                         Token = token
                     };
 
@@ -96,9 +94,9 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Auth
                         return ApiResponse<RegisterResponseDto>.Failed("User with this phone number already exists!", StatusCodes.Status400BadRequest, []);
                     }
 
-                    var defaultUsername = $"{registerDto.FirstName[0]}{registerDto.LastName[0]}";
+                    //var defaultUsername = $"{registerDto.FirstName[0]}{registerDto.LastName[0]}";
 
-                    var newUser = new User { FirstName = registerDto.FirstName, LastName = registerDto.LastName, PhoneNumber = registerDto.PhoneNumber, Email = registerDto.Email, UserName = defaultUsername };
+                    var newUser = new User { FirstName = registerDto.FirstName, LastName = registerDto.LastName, PhoneNumber = registerDto.PhoneNumber, Email = registerDto.Email, UserName = registerDto.Email };
                     var result = await _userManager.CreateAsync(newUser, registerDto.Password!);
 
                     if (!result.Succeeded)
