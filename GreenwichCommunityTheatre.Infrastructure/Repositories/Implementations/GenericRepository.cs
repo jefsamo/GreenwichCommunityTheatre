@@ -16,6 +16,7 @@ namespace GreenwichCommunityTheatre.Infrastructure.Repositories.Implementations
 
         public GenericRepository(GctDbContext dbContext) => _dbContext = dbContext;
         public async Task AddAsync(T entity) => await _dbContext.Set<T>().AddAsync(entity);
+        public async Task AddRangeAsync(IEnumerable<T> entities) => await _dbContext.Set<T>().AddRangeAsync(entities);
         public void DeleteAllAsync(List<T> entities) => _dbContext.Set<T>().RemoveRange(entities);
         public void DeleteAsync(T entity) => _dbContext.Set<T>().Remove(entity);
         public async Task<List<T>> FindAsync(Expression<Func<T, bool>> expression) => await _dbContext.Set<T>().Where(expression).ToListAsync();

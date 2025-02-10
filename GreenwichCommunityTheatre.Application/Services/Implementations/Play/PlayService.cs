@@ -144,7 +144,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Play
                     await _playRepository.SaveChangesAsync();
 
                     var playDto = _mapper.Map<PlayResponseDto>(play);
-                    return ApiResponse<PlayResponseDto>.Success("Play deleted succcessfully", StatusCodes.Status200OK, default!);
+                    return ApiResponse<PlayResponseDto>.Success("Play deleted succcessfully", StatusCodes.Status204NoContent, default!);
                 }
             }
             catch (Exception ex)
