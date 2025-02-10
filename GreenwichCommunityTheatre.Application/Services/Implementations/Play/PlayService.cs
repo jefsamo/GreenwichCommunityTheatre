@@ -56,33 +56,6 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Play
             }
         }
 
-        public async Task<ApiResponse<PlayResponseDto>> DeletePlayAsync(string id)
-        {
-            try
-            {
-                using (Operation.Time("Time taken to update a play"))
-                {
-                    var play = await _playRepository.GetByIdAsync(id);
-
-                    if (play is null)
-                    {
-                        return ApiResponse<PlayResponseDto>.Failed("Play not found", StatusCodes.Status404NotFound, []);
-                    }
-
-                    _playRepository.DeleteAsync(play);
-                    await _playRepository.SaveChangesAsync();
-
-                    var playDto = _mapper.Map<PlayResponseDto>(play);
-                    return ApiResponse<PlayResponseDto>.Success("Play deleted succcessfully", StatusCodes.Status200OK, playDto);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Some error occurred while deleting play." + ex.Message);
-                return ApiResponse<PlayResponseDto>.Failed("Some error occurred while deleting play." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
-            }
-        }
-
         public async Task<ApiResponse<IEnumerable<PlayResponseDto>>> GetAllPlayAsync()
         {
             try
@@ -151,6 +124,33 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Play
             {
                 _logger.LogError(ex, "Some error occurred while updating play." + ex.Message);
                 return ApiResponse<PlayResponseDto>.Failed("Some error occurred while updating play." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+            }
+        }
+
+        public async Task<ApiResponse<PlayResponseDto>> DeletePlayAsync(string id)
+        {
+            try
+            {
+                using (Operation.Time("Time taken to delete a play"))
+                {
+                    var play = await _playRepository.GetByIdAsync(id);
+
+                    if (play is null)
+                    {
+                        return ApiResponse<PlayResponseDto>.Failed("Play not found", StatusCodes.Status404NotFound, []);
+                    }
+
+                    _playRepository.DeleteAsync(play);
+                    await _playRepository.SaveChangesAsync();
+
+                    var playDto = _mapper.Map<PlayResponseDto>(play);
+                    return ApiResponse<PlayResponseDto>.Success("Play deleted succcessfully", StatusCodes.Status200OK, default!);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Some error occurred while deleting play." + ex.Message);
+                return ApiResponse<PlayResponseDto>.Failed("Some error occurred while deleting play." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
             }
         }
     }

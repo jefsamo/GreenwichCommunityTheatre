@@ -1,7 +1,9 @@
 ﻿using GreenwichCommunityTheatre.Application.Services.Implementations.Auth;
 using GreenwichCommunityTheatre.Application.Services.Implementations.Play;
+using GreenwichCommunityTheatre.Application.Services.Implementations.Seat;
 using GreenwichCommunityTheatre.Application.Services.Interfaces.Auth;
 using GreenwichCommunityTheatre.Application.Services.Interfaces.Play;
+using GreenwichCommunityTheatre.Application.Services.Interfaces.Seat;
 using GreenwichCommunityTheatre.Domain.Entities;
 using GreenwichCommunityTheatre.Infrastructure.Context;
 using GreenwichCommunityTheatre.Infrastructure.Repositories.Implementations;
@@ -24,6 +26,7 @@ namespace GreenwichCommunityTheatre.Extensions
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IPlayService, PlayService>();
+            services.AddScoped<ISeatService, SeatService>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddAutoMapper(typeof(MapperProfile));
             services.AddDbContext<GctDbContext>(options =>
