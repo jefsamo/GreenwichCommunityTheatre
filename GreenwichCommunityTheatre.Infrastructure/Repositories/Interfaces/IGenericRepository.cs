@@ -13,6 +13,7 @@ namespace GreenwichCommunityTheatre.Infrastructure.Repositories.Interfaces
         Task<List<T>> GetAllAsync();
         Task<List<T>> FindAsync(Expression<Func<T, bool>> expression);
         Task AddAsync(T entity);
+        Task AddRangeAsync(IEnumerable<T> entities);
         void Update(T entity);
         void DeleteAsync(T entity);
         void DeleteAllAsync(List<T> entities);
