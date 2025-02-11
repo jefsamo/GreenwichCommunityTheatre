@@ -99,7 +99,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
         {
             try
             {
-                using (Operation.Time("Time taken to create a reservation"))
+                using (Operation.Time("Time taken to get a reservation"))
                 { 
                     var reservation = await _reservationRepository.GetByIdAsync(id);
 
@@ -116,10 +116,8 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
 
                     foreach (var ticket in tickets)
                     {
-                        // Fetch Play title by PlayId
                         var play = await _playRepository.GetByIdAsync(ticket.PlayId);
 
-                        // Fetch Seat details by SeatId
                         var seat = await _seatRepository.GetByIdAsync(ticket.SeatId);
 
                         // Map to DTO
