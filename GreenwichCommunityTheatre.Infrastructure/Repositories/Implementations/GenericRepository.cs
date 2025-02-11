@@ -21,7 +21,12 @@ namespace GreenwichCommunityTheatre.Infrastructure.Repositories.Implementations
         public void DeleteAsync(T entity) => _dbContext.Set<T>().Remove(entity);
         public async Task<List<T>> FindAsync(Expression<Func<T, bool>> expression) => await _dbContext.Set<T>().Where(expression).ToListAsync();
         public async Task<T> FindSingleAsync(Expression<Func<T, bool>> expression) => await _dbContext!.Set<T>().FirstOrDefaultAsync(expression);
-        public async Task<List<T>> GetAllAsync() => await _dbContext.Set<T>().ToListAsync();
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null)
+        {
+            return filter != null
+                ? await _dbContext.Set<T>().Where(filter).ToListAsync()
+                : await _dbContext.Set<T>().ToListAsync();
+        }
         public async Task<T> GetByIdAsync(string id) => await _dbContext.Set<T>().FindAsync(id);
         public async Task<int> SaveChangesAsync() => await _dbContext.SaveChangesAsync();
         public void Update(T entity) => _dbContext.Set<T>().Update(entity);

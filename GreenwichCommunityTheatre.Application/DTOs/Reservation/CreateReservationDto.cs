@@ -9,6 +9,6 @@ namespace GreenwichCommunityTheatre.Application.DTOs.Reservation
         public required string LastName { get; set; }
         public required string Email { get; set; }
         public ShippingOption ShippingOption { get; set; } = ShippingOption.Pickup;
-        public List<TicketDto> Tickets { get; set; }
+        public List<TicketDto>? Tickets { get; set; }
     }
 }
