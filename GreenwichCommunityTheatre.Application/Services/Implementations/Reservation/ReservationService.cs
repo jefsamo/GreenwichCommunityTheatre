@@ -23,17 +23,22 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
         private readonly ILogger<ReservationService> _logger;
         private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Reservation> _reservationRepository;
         private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Ticket> _ticketRepository;
+        private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Play> _playRepository;
+        private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Seat> _seatRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<User> _userManager;
 
 
-        public ReservationService(IMapper mapper, GctDbContext gctDbContext, ILogger<ReservationService> logger, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Reservation> reservationRepository, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Ticket> ticketRepository, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
+        public ReservationService(IMapper mapper, GctDbContext gctDbContext, ILogger<ReservationService> logger, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Reservation> reservationRepository, 
+            IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Ticket> ticketRepository, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Play> playRepository, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Seat> seatRepository, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
         {
             _mapper = mapper;
             _gctDbContext = gctDbContext;
             _logger = logger;
             _reservationRepository = reservationRepository;
             _ticketRepository = ticketRepository;
+            _playRepository = playRepository;
+            _seatRepository = seatRepository;
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
         }
@@ -107,7 +112,30 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                     //var ticketList = new List<ReservationTicketResponseDto>();
 
                     // Map tickets to ReservationTicketResponseDto
-                    var mappedTickets = _mapper.Map<List<ReservationTicketResponseDto>>(tickets);
+                    var mappedTickets = new List<ReservationTicketResponseDto>();
+
+                    foreach (var ticket in tickets)
+                    {
+                        // Fetch Play title by PlayId
+                        var play = await _playRepository.GetByIdAsync(ticket.PlayId);
+
+                        // Fetch Seat details by SeatId
+                        var seat = await _seatRepository.GetByIdAsync(ticket.SeatId);
+
+                        // Map to DTO
+                        var ticketDto = new ReservationTicketResponseDto
+                        {
+                            Title = play!.Title,
+                            SeatNumber = seat.SeatNumber,
+                            SeatPrice = seat.Price,
+                            ImageUrl = play.ImageUrl,
+                            PlayPrice = play.Price,
+                            CustomerName = ticket.CustomerName,
+                            DateOfBirth = ticket.DateOfBirth,
+                        };
+
+                        mappedTickets.Add(ticketDto);
+                    }
 
                     // Construct the response DTO
                     var reservationResponse = new ReservationResponseDto<ReservationTicketResponseDto>
