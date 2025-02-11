@@ -38,7 +38,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             _userManager = userManager;
         }
 
-        public async Task<ApiResponse<ReservationResponseDto>> CreateReservationAsync(CreateReservationDto createReservationDto)
+        public async Task<ApiResponse<ReservationResponseDto<TicketResponseDto>>> CreateReservationAsync(CreateReservationDto createReservationDto)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                     await _ticketRepository.AddRangeAsync(ticketEntities);
                     await _ticketRepository.SaveChangesAsync();
 
-                    var reservationResponse = new ReservationResponseDto
+                    var reservationResponse = new ReservationResponseDto<TicketResponseDto>
                     {
                         FirstName = reservation.FirstName,
                         LastName = reservation.LastName,
@@ -78,7 +78,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                         Tickets = _mapper.Map<List<TicketResponseDto>>(ticketEntities)
                     };
 
-                    return ApiResponse<ReservationResponseDto>.Success("Reservation created successfully", StatusCodes.Status201Created, reservationResponse);
+                    return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Success("Reservation created successfully", StatusCodes.Status201Created, reservationResponse);
 
                 }
 
@@ -86,7 +86,48 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Some error occurred while creating reservation." + ex.Message);
-                return ApiResponse<ReservationResponseDto>.Failed("Some error occurred while creating reservation." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+                return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Failed("Some error occurred while creating reservation." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+            }
+        }
+
+        public async Task<ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>> GetAReservationAsync(string id)
+        {
+            try
+            {
+                using (Operation.Time("Time taken to create a reservation"))
+                { 
+                    var reservation = await _reservationRepository.GetByIdAsync(id);
+
+                    if(reservation is null)
+                    {
+                       return ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>.Failed("Reservation not found", StatusCodes.Status404NotFound, []);
+                    }
+
+                    var tickets = await _ticketRepository.GetAllAsync(t => t.ReservationId == reservation.Id);
+                    //var ticketList = new List<ReservationTicketResponseDto>();
+
+                    // Map tickets to ReservationTicketResponseDto
+                    var mappedTickets = _mapper.Map<List<ReservationTicketResponseDto>>(tickets);
+
+                    // Construct the response DTO
+                    var reservationResponse = new ReservationResponseDto<ReservationTicketResponseDto>
+                    {
+                        FirstName = reservation.FirstName,
+                        LastName = reservation.LastName,
+                        Email = reservation.Email,
+                        UserId = reservation.UserId,
+                        HasPaid = reservation.HasPaid,
+                        ShippingOption = reservation.ShippingOption,
+                        Tickets = mappedTickets
+                    };
+
+                    return ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>.Success("Reservation retrieved succcessfully", StatusCodes.Status200OK, reservationResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Some error occurred while retrieving reservation." + ex.Message);
+                return ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>.Failed("Some error occurred while retrieving reservation." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
             }
         }
     }

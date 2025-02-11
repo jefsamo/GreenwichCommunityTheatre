@@ -28,5 +28,18 @@ namespace GreenwichCommunityTheatre.Controllers
 
             return BadRequest(response);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAReservation(string id)
+        {
+            var response = await _reservationService.GetAReservationAsync(id);
+
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
     }
 }
