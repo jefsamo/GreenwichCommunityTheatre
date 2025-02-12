@@ -29,7 +29,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
         private readonly UserManager<User> _userManager;
 
 
-        public ReservationService(IMapper mapper, GctDbContext gctDbContext, ILogger<ReservationService> logger, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Reservation> reservationRepository, 
+        public ReservationService(IMapper mapper, GctDbContext gctDbContext, ILogger<ReservationService> logger, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Reservation> reservationRepository,
             IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Ticket> ticketRepository, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Play> playRepository, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Seat> seatRepository, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
         {
             _mapper = mapper;
@@ -100,12 +100,24 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             try
             {
                 using (Operation.Time("Time taken to get a reservation"))
-                { 
+                {
                     var reservation = await _reservationRepository.GetByIdAsync(id);
 
-                    if(reservation is null)
+                    if (reservation is null)
                     {
-                       return ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>.Failed("Reservation not found", StatusCodes.Status404NotFound, []);
+                        return ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>.Failed("Reservation not found", StatusCodes.Status404NotFound, []);
+                    }
+
+                    var currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    if (string.IsNullOrEmpty(currentUserId))
+                    {
+                        return ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>.Failed("Unauthorized", StatusCodes.Status401Unauthorized, []);
+                    }
+
+                    var isOperator = _httpContextAccessor.HttpContext.User.IsInRole("Operator");
+                    if (!reservation.UserId.ToString().Equals(currentUserId, StringComparison.OrdinalIgnoreCase) && !isOperator)
+                    {
+                        return ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>.Failed("Access denied", StatusCodes.Status403Forbidden, []);
                     }
 
                     var tickets = await _ticketRepository.GetAllAsync(t => t.ReservationId == reservation.Id);
@@ -154,6 +166,41 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             {
                 _logger.LogError(ex, "Some error occurred while retrieving reservation." + ex.Message);
                 return ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>.Failed("Some error occurred while retrieving reservation." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+            }
+        }
+
+        public async Task<ApiResponse<ReservationResponseDto<TicketResponseDto>>> MarkReservationAsPaidAsync(string id, UpdateReservationDto updateReservationDto)
+        {
+            try
+            {
+                using (Operation.Time("Time taken to update a reservation HasPaid property"))
+                {
+                    var reservation = await _reservationRepository.GetByIdAsync(id);
+                    if (reservation is null)
+                    {
+                        return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Failed("Reservation not found", StatusCodes.Status404NotFound, []);
+                    }
+
+                    reservation.HasPaid = updateReservationDto.HasPaid;
+                    reservation.UpdatedAt = DateTime.UtcNow;
+                    await _reservationRepository.SaveChangesAsync();
+
+                    var reservationResponse = new ReservationResponseDto<TicketResponseDto>
+                    {
+                        FirstName = reservation.FirstName,
+                        LastName = reservation.LastName,
+                        Email = reservation.Email,
+                        HasPaid = reservation.HasPaid,
+                    };
+
+                    return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Success("Reservation retrieved succcessfully", StatusCodes.Status200OK, reservationResponse);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Some error occurred while retrieving reservation." + ex.Message);
+                return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Failed("Some error occurred while retrieving reservation." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
             }
         }
     }
