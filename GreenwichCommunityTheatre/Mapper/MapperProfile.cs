@@ -2,6 +2,7 @@
 using GreenwichCommunityTheatre.Application.DTOs.Auth;
 using GreenwichCommunityTheatre.Application.DTOs.Play;
 using GreenwichCommunityTheatre.Application.DTOs.Reservation;
+using GreenwichCommunityTheatre.Application.DTOs.Review;
 using GreenwichCommunityTheatre.Application.DTOs.Seat;
 using GreenwichCommunityTheatre.Domain.Entities;
 
@@ -33,6 +34,10 @@ namespace GreenwichCommunityTheatre.Mapper
             CreateMap<Ticket, ReservationTicketResponseDto>().ReverseMap();
             CreateMap<Ticket, TicketResponseDto>().ReverseMap();
             CreateMap<Ticket, TicketDto>().ReverseMap();
+
+            CreateMap<Review, ReviewResponseDto>().ReverseMap();
+            CreateMap<Review, CreateReviewDto>().ReverseMap();
+            CreateMap<Review, UpdateReviewDto>().ReverseMap();
         }
 
     }

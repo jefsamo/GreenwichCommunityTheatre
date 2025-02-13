@@ -21,13 +21,12 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
         private readonly IMapper _mapper;
         private readonly GctDbContext _gctDbContext;
         private readonly ILogger<ReservationService> _logger;
+        private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Play> _playRepository;
         private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Reservation> _reservationRepository;
         private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Ticket> _ticketRepository;
-        private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Play> _playRepository;
         private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Seat> _seatRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<User> _userManager;
-
 
         public ReservationService(IMapper mapper, GctDbContext gctDbContext, ILogger<ReservationService> logger, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Reservation> reservationRepository,
             IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Ticket> ticketRepository, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Play> playRepository, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Seat> seatRepository, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
@@ -182,7 +181,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                     }
 
                     reservation.HasPaid = updateReservationDto.HasPaid;
-                    reservation.UpdatedAt = DateTime.UtcNow;
+                    reservation.UpdatedAt = DateTimeOffset.UtcNow;
                     await _reservationRepository.SaveChangesAsync();
 
                     var reservationResponse = new ReservationResponseDto<TicketResponseDto>
