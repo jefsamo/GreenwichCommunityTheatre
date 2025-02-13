@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GreenwichCommunityTheatre.Application.DTOs.Play
+﻿namespace GreenwichCommunityTheatre.Application.DTOs.Play
 {
     public class PlayResponseDto
     {
