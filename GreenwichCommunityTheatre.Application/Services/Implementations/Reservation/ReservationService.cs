@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using SerilogTimings;
 using System.Security.Claims;
+using System.Text;
 
 
 namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reservation
@@ -42,6 +43,55 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             _userManager = userManager;
         }
 
+        public async Task<ApiResponse<TicketResponseDto>> CheckInTicket(string checkInCode)
+        {
+            try
+            {
+                using (Operation.Time("Time taken to check-in customer"))
+                {
+                    var ticket = await _ticketRepository.FindSingleAsync((ticket) => ticket.TicketCode == checkInCode);
+
+                    if (ticket == null)
+                    {
+                        return ApiResponse<TicketResponseDto>.Failed("Ticket not found", StatusCodes.Status404NotFound, []);
+                    }
+
+                    if (ticket.HasCheckedIn)
+                    {
+                        return ApiResponse<TicketResponseDto>.Failed("Ticket already used", StatusCodes.Status400BadRequest, []);
+                    }
+
+                    var reservationId = ticket.ReservationId;
+
+                    var reservation = await _reservationRepository.GetByIdAsync(reservationId);
+
+                    if (!reservation.HasPaid)
+                    {
+                        return ApiResponse<TicketResponseDto>.Failed("Customer has not paid", StatusCodes.Status400BadRequest, []);
+                    }
+
+                    ticket.HasCheckedIn = true;
+                    await _ticketRepository.SaveChangesAsync();
+
+                    var ticketResponse = new TicketResponseDto
+                    {
+                        FirstName = ticket.FirstName,
+                        LastName = ticket.LastName,
+                        HasCheckedIn = ticket.HasCheckedIn,
+                        DateOfBirth = ticket.DateOfBirth,
+                    };
+
+                    return ApiResponse<TicketResponseDto>.Success("Ticket check-in code succcessfully", StatusCodes.Status200OK, ticketResponse);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Some error occurred while retrieving reservation." + ex.Message);
+                return ApiResponse<TicketResponseDto>.Failed("Some error occurred while retrieving reservation." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+            }
+        }
+
         public async Task<ApiResponse<ReservationResponseDto<TicketResponseDto>>> CreateReservationAsync(CreateReservationDto createReservationDto)
         {
             try
@@ -68,6 +118,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                     foreach (var ticket in ticketEntities)
                     {
                         ticket.ReservationId = reservation.Id;
+                        ticket.TicketCode = GenerateTicketCode();
                     }
 
                     await _ticketRepository.AddRangeAsync(ticketEntities);
@@ -139,8 +190,11 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                             SeatPrice = seat.Price,
                             ImageUrl = play.ImageUrl,
                             PlayPrice = play.Price,
-                            CustomerName = ticket.CustomerName,
+                            FirstName = ticket.FirstName,
+                            LastName = ticket.LastName,
                             DateOfBirth = ticket.DateOfBirth,
+                            HasCheckedIn = ticket.HasCheckedIn || false,
+                            TicketCode = ticket.TicketCode ?? "",
                         };
 
                         mappedTickets.Add(ticketDto);
@@ -154,7 +208,6 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                         Email = reservation.Email,
                         UserId = reservation.UserId,
                         HasPaid = reservation.HasPaid,
-                        ShippingOption = reservation.ShippingOption,
                         Tickets = mappedTickets
                     };
 
@@ -201,6 +254,20 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                 _logger.LogError(ex, "Some error occurred while retrieving reservation." + ex.Message);
                 return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Failed("Some error occurred while retrieving reservation." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
             }
+        }
+
+        private string GenerateTicketCode(int length = 5)
+        {
+            const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            StringBuilder result = new(length);
+
+            for (int i = 0; i < length; i++)
+            {
+                result.Append(Chars[Random.Shared.Next(Chars.Length)]);
+            }
+
+            return $"GCT_{result?.ToString()}";
         }
     }
 }

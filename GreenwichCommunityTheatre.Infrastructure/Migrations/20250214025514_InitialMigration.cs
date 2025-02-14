@@ -204,7 +204,7 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HasPaid = table.Column<bool>(type: "bit", nullable: false),
-                    ShippingOption = table.Column<int>(type: "int", nullable: false),
+                    ShippingOption = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
@@ -277,8 +277,11 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
                     ReservationId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PlayId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SeatId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CustomerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
+                    HasCheckedIn = table.Column<bool>(type: "bit", nullable: false),
+                    TicketCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
@@ -362,8 +365,7 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Shipments_ReservationId",
                 table: "Shipments",
-                column: "ReservationId",
-                unique: true);
+                column: "ReservationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_PlayId",

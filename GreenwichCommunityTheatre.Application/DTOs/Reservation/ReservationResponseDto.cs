@@ -10,7 +10,6 @@ namespace GreenwichCommunityTheatre.Application.DTOs.Reservation
         public Guid UserId { get; set; }
         public required string Email { get; set; }
         public bool HasPaid { get; set; } = false;
-        public ShippingOption ShippingOption { get; set; } = ShippingOption.Pickup;
         public List<T>? Tickets { get; set; }
     }
 }
