@@ -1,4 +1,4 @@
-﻿using GreenwichCommunityTheatre.Domain.Entities.Enums;
+﻿using GreenwichCommunityTheatre.Domain.Entities.utils;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GreenwichCommunityTheatre.Domain.Entities
@@ -10,9 +10,9 @@ namespace GreenwichCommunityTheatre.Domain.Entities
         public required Guid UserId { get; set; }
         public required string Email { get; set; }
         public bool HasPaid { get; set; } = false;
-        public ShippingOption ShippingOption { get; set; } = ShippingOption.Pickup;
+        public string ShippingOption { get; set; } = ShippingStatus.WALK_IN;
         public virtual ICollection<Ticket> Tickets { get; set; }
-        public Shipment Shipment { get; set; }
+        //public Shipment Shipment { get; set; }
 
         [ForeignKey("UserId")]
         public User? User { get; set; }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GreenwichCommunityTheatre.Application.DTOs.Reservation
+﻿namespace GreenwichCommunityTheatre.Application.DTOs.Reservation
 {
     public class ReservationTicketResponseDto
     {
@@ -13,7 +7,10 @@ namespace GreenwichCommunityTheatre.Application.DTOs.Reservation
         public required double PlayPrice { get; set; }
         public required string SeatNumber { get; set; }
         public required double SeatPrice { get; set; }
-        public required string CustomerName { get; set; }
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
         public required DateOnly DateOfBirth { get; set; }
+        public required bool HasCheckedIn { get; set; } = false;
+        public required string TicketCode { get; set; }
     }
 }

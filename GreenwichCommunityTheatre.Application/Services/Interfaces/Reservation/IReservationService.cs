@@ -7,6 +7,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Interfaces.Reservation
     {
         Task<ApiResponse<ReservationResponseDto<TicketResponseDto>>> CreateReservationAsync(CreateReservationDto createReservationDto);
         Task<ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>> GetAReservationAsync(string id);
+        Task<ApiResponse<TicketResponseDto>> CheckInTicket(string checkInCode);
         Task<ApiResponse<ReservationResponseDto<TicketResponseDto>>> MarkReservationAsPaidAsync(string id, UpdateReservationDto updateReservationDto);
     }
 }

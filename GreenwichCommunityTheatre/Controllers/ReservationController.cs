@@ -46,6 +46,21 @@ namespace GreenwichCommunityTheatre.Controllers
             return BadRequest(response);
         }
 
+        [HttpPost("check-in")]
+        [Authorize(Roles = "Operator")]
+        [CustomAuthorizeFilter]
+        public async Task<IActionResult> CheckInCustomerTicket([FromBody] CheckInDto checkInDto)
+        {
+            var response = await _reservationService.CheckInTicket(checkInDto.TicketCode);
+
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAReservation(string id)
         {

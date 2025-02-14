@@ -81,8 +81,9 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ShippingOption")
-                        .HasColumnType("int");
+                    b.Property<string>("ShippingOption")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
@@ -202,8 +203,7 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReservationId")
-                        .IsUnique();
+                    b.HasIndex("ReservationId");
 
                     b.ToTable("Shipments");
                 });
@@ -216,12 +216,19 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("CustomerName")
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
+
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
+                    b.Property<bool>("HasCheckedIn")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PlayId")
                         .IsRequired()
@@ -234,6 +241,10 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
                     b.Property<string>("SeatId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TicketCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
@@ -465,8 +476,8 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
             modelBuilder.Entity("GreenwichCommunityTheatre.Domain.Entities.Shipment", b =>
                 {
                     b.HasOne("GreenwichCommunityTheatre.Domain.Entities.Reservation", "Reservation")
-                        .WithOne("Shipment")
-                        .HasForeignKey("GreenwichCommunityTheatre.Domain.Entities.Shipment", "ReservationId")
+                        .WithMany()
+                        .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -560,9 +571,6 @@ namespace GreenwichCommunityTheatre.Infrastructure.Migrations
 
             modelBuilder.Entity("GreenwichCommunityTheatre.Domain.Entities.Reservation", b =>
                 {
-                    b.Navigation("Shipment")
-                        .IsRequired();
-
                     b.Navigation("Tickets");
                 });
 
