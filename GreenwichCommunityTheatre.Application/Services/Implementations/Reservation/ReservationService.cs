@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using GreenwichCommunityTheatre.Application.DTOs.Reservation;
-using GreenwichCommunityTheatre.Application.DTOs.Seat;
-using GreenwichCommunityTheatre.Application.Services.Implementations.Seat;
 using GreenwichCommunityTheatre.Application.Services.Interfaces.Reservation;
 using GreenwichCommunityTheatre.Domain;
 using GreenwichCommunityTheatre.Domain.Entities;
