@@ -111,6 +111,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
 
                     await _reservationRepository.AddAsync(reservation);
                     await _reservationRepository.SaveChangesAsync();
+                    //await _reservationRepository.SaveChangesAsync();
 
                     var ticketEntities = _mapper.Map<List<Ticket>>(createReservationDto.Tickets);
                     foreach (var ticket in ticketEntities)
