@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GreenwichCommunityTheatre.Application.DTOs.Play;
 using GreenwichCommunityTheatre.Application.DTOs.Review;
 using GreenwichCommunityTheatre.Application.Services.Interfaces.Review;
 using GreenwichCommunityTheatre.Domain;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using SerilogTimings;
+using System.Numerics;
 using System.Security.Claims;
 
 namespace GreenwichCommunityTheatre.Application.Services.Implementations.Review
@@ -117,6 +119,24 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Review
         public Task<ApiResponse<ReviewResponseDto>> DeleteReview(string id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ApiResponse<IEnumerable<ReviewResponseDto>>> GetReviewsByPlayId(string playId)
+        {
+            try
+            {
+                using (Operation.Time("Time taken to get all reviews for a play"))
+                {
+                    var reviews = await _reviewRepository.GetAllAsync((p) => p.PlayId == playId);
+                    var reviewsDto = _mapper.Map<IEnumerable<ReviewResponseDto>>(reviews);
+                    return ApiResponse<IEnumerable<ReviewResponseDto>>.Success("All reviews for this play retrieved succcessfully", StatusCodes.Status201Created, reviewsDto);
+                }
+            }
+            catch (Exception ex) {
+                _logger.LogError(ex, "Some error occurred while updating review." + ex.Message);
+                return ApiResponse<IEnumerable<ReviewResponseDto>>.Failed("Some error occurred while updating review." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+            }
+           
         }
     }
 }
