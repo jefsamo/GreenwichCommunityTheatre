@@ -19,7 +19,7 @@ namespace GreenwichCommunityTheatre.Controllers
         }
 
         [Authorize(Roles = "Operator, Customer")]
-        [CustomAuthorizeFilter]
+        //[CustomAuthorizeFilter]
         [HttpPost]
         public async Task<IActionResult> CreateReview([FromBody] CreateReviewDto createReviewDto)
         {
@@ -39,6 +39,20 @@ namespace GreenwichCommunityTheatre.Controllers
         public async Task<IActionResult> UpdateReview(string id, [FromBody] UpdateReviewDto updateReviewDto)
         {
             var response = await _reviewService.UpdateReviewAsync(id, updateReviewDto);
+
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{playId}/reviews")]
+        public async Task<IActionResult> GetReviewByPlayId(string playId)
+        {
+            var response = await _reviewService.GetReviewsByPlayId(playId);
 
             if (response.Succeeded)
             {
