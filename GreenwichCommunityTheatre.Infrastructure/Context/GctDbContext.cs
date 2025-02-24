@@ -20,7 +20,6 @@ namespace GreenwichCommunityTheatre.Infrastructure.Context
         public DbSet<Seat> Seats { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
-        public DbSet<Shipment> Shipments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -35,6 +34,18 @@ namespace GreenwichCommunityTheatre.Infrastructure.Context
 
             modelBuilder.Entity<Play>().HasMany(p => p.Tickets).WithOne(p => p.Play).HasForeignKey(p => p.PlayId).IsRequired();
             modelBuilder.Entity<Play>().HasMany(p => p.Reviews).WithOne(p => p.Play).HasForeignKey(p => p.PlayId).IsRequired();
+            
+
+            SeedPlayData(modelBuilder);
+        }
+
+        private void SeedPlayData(ModelBuilder modelBuilder) {
+            string playsJson = File.ReadAllText("plays.json");
+            List<Play> plays = System.Text.Json.JsonSerializer.Deserialize<List<Play>>(playsJson)!;
+
+            foreach (var play in plays) {
+                modelBuilder.Entity<Play>().HasData(play);
+            }
         }
     }
 }

@@ -99,7 +99,16 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                     var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
 
                     var user = await _userManager.FindByIdAsync(userId!);
+                    var playId = createReservationDto.Tickets?.FirstOrDefault()?.PlayId;
 
+                    var requestedSeats = createReservationDto.Tickets?.Select(t => t.SeatId).ToList();
+
+                    var existingReservations = await _ticketRepository.FindAsync(t => t.PlayId == playId && requestedSeats!.Contains(t.SeatId));
+
+                    if (existingReservations.Any())
+                    {
+                        return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Failed("One or more requested seats are already booked", StatusCodes.Status400BadRequest, new List<string>());
+                    }
                     var reservation = new GreenwichCommunityTheatre.Domain.Entities.Reservation
                     {
                         FirstName = createReservationDto.FirstName,
@@ -236,6 +245,22 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                     reservation.UpdatedAt = DateTimeOffset.UtcNow;
                     await _reservationRepository.SaveChangesAsync();
 
+                    var tickets = await _ticketRepository.GetAllAsync(t => t.ReservationId == reservation.Id);
+                    var ticketCount = tickets.Count();
+                    var playId = reservation?.Tickets.FirstOrDefault()?.PlayId;
+
+                    var play = await _playRepository.FindSingleAsync((p) => p.Id == playId);
+
+                    if (play.AvailableSeats >= ticketCount)
+                    {
+                        play.AvailableSeats -= ticketCount;
+                        await _playRepository.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Failed("Not enough available seats.", StatusCodes.Status400BadRequest, new List<string>());
+                    }
+
                     var reservationResponse = new ReservationResponseDto<TicketResponseDto>
                     {
                         FirstName = reservation.FirstName,
@@ -244,7 +269,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                         HasPaid = reservation.HasPaid,
                     };
 
-                    return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Success("Reservation retrieved succcessfully", StatusCodes.Status200OK, reservationResponse);
+                    return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Success("Reservation Updated succcessfully", StatusCodes.Status200OK, reservationResponse);
 
                 }
             }
