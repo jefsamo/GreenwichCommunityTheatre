@@ -19,7 +19,7 @@ namespace GreenwichCommunityTheatre.Controllers
         }
 
         [Authorize(Roles = "Operator, Customer")]
-        //[CustomAuthorizeFilter]
+        [CustomAuthorizeFilter]
         [HttpPost]
         public async Task<IActionResult> CreateReview([FromBody] CreateReviewDto createReviewDto)
         {
