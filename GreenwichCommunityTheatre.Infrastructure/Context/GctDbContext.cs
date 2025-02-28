@@ -34,17 +34,26 @@ namespace GreenwichCommunityTheatre.Infrastructure.Context
 
             modelBuilder.Entity<Play>().HasMany(p => p.Tickets).WithOne(p => p.Play).HasForeignKey(p => p.PlayId).IsRequired();
             modelBuilder.Entity<Play>().HasMany(p => p.Reviews).WithOne(p => p.Play).HasForeignKey(p => p.PlayId).IsRequired();
-            
 
-            SeedPlayData(modelBuilder);
+
+            SeedData<Review>(modelBuilder,"reviews.json");
+            SeedData<Seat>(modelBuilder, "seats.json");
+            SeedData<Play>(modelBuilder, "plays.json");
         }
 
-        private void SeedPlayData(ModelBuilder modelBuilder) {
-            string playsJson = File.ReadAllText("plays.json");
-            List<Play> plays = System.Text.Json.JsonSerializer.Deserialize<List<Play>>(playsJson)!;
+        private void SeedData<T>(ModelBuilder modelBuilder, string filePath) where T : class
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"File not found: {filePath}");
+            }
 
-            foreach (var play in plays) {
-                modelBuilder.Entity<Play>().HasData(play);
+            string dataJson = File.ReadAllText(filePath);
+            List<T> datas = System.Text.Json.JsonSerializer.Deserialize<List<T>>(dataJson)!;
+
+            foreach (var data in datas)
+            {
+                modelBuilder.Entity<T>().HasData(data);
             }
         }
     }
