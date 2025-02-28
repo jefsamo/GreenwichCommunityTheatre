@@ -9,5 +9,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Interfaces.Reservation
         Task<ApiResponse<ReservationResponseDto<ReservationTicketResponseDto>>> GetAReservationAsync(string id);
         Task<ApiResponse<TicketResponseDto>> CheckInTicket(string checkInCode);
         Task<ApiResponse<ReservationResponseDto<TicketResponseDto>>> MarkReservationAsPaidAsync(string id, UpdateReservationDto updateReservationDto);
+        Task<ApiResponse<IEnumerable<TicketResponseDto>>> GetAllTicketsAsync();
+
     }
 }

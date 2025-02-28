@@ -9,6 +9,7 @@ namespace GreenwichCommunityTheatre.Domain.Entities
         public required string LastName { get; set; }
         public required Guid UserId { get; set; }
         public required string Email { get; set; }
+        //public double? TotalPrice { get; set; }
         public bool HasPaid { get; set; } = false;
         public string ShippingOption { get; set; } = ShippingStatus.WALK_IN;
         public virtual ICollection<Ticket> Tickets { get; set; }

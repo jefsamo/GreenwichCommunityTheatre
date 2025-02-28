@@ -30,6 +30,19 @@ namespace GreenwichCommunityTheatre.Controllers
 
             return BadRequest(response);
         }
+        [HttpGet("tickets")]
+        [Authorize(Roles = "Operator, Customer")]
+        public async Task<IActionResult> GetAllTickets()
+        {
+            var response = await _reservationService.GetAllTicketsAsync();
+
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
 
         [HttpPost("{id}/update")]
         [Authorize(Roles = "Operator")]
