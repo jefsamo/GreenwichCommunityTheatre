@@ -18,6 +18,21 @@ namespace GreenwichCommunityTheatre.Controllers
             _reviewService = reviewService;
         }
 
+        [Authorize(Roles = "Operator")]
+        //[CustomAuthorizeFilter]
+        [HttpGet]
+        public async Task<IActionResult> GetAllReviews()
+        {
+            var response = await _reviewService.GetAllReviewsAsync();
+
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
         [Authorize(Roles = "Operator, Customer")]
         //[CustomAuthorizeFilter]
         [HttpPost]

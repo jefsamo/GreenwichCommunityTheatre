@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GreenwichCommunityTheatre.Application.DTOs.Play;
 using GreenwichCommunityTheatre.Application.DTOs.Review;
+using GreenwichCommunityTheatre.Application.DTOs.Seat;
 using GreenwichCommunityTheatre.Application.Services.Interfaces.Review;
 using GreenwichCommunityTheatre.Domain;
 using GreenwichCommunityTheatre.Domain.Entities;
@@ -137,6 +138,25 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Review
                 return ApiResponse<IEnumerable<ReviewResponseDto>>.Failed("Some error occurred while updating review." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
             }
            
+        }
+
+        public async Task<ApiResponse<IEnumerable<ReviewResponseDto>>> GetAllReviewsAsync()
+        {
+            try
+            {
+                using (Operation.Time("Time taken to get all reviews"))
+                {
+                    var reviews = await _reviewRepository.GetAllAsync();
+
+                    var reviewsDto = _mapper.Map<IEnumerable<ReviewResponseDto>>(reviews);
+                    return ApiResponse<IEnumerable<ReviewResponseDto>>.Success("All reviews retrieved succcessfully", StatusCodes.Status201Created, reviewsDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Some error occurred while retrieving reviews." + ex.Message);
+                return ApiResponse<IEnumerable<ReviewResponseDto>>.Failed("Some error occurred while retrieving reviews." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+            }
         }
     }
 }
