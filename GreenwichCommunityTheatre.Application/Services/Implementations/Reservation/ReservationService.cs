@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GreenwichCommunityTheatre.Application.DTOs.Reservation;
+using GreenwichCommunityTheatre.Application.DTOs.Seat;
 using GreenwichCommunityTheatre.Application.Services.Interfaces.Reservation;
 using GreenwichCommunityTheatre.Domain;
 using GreenwichCommunityTheatre.Domain.Entities;
@@ -111,9 +112,10 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                     }
                     var reservation = new GreenwichCommunityTheatre.Domain.Entities.Reservation
                     {
-                        FirstName = createReservationDto.FirstName,
-                        LastName = createReservationDto.LastName,
-                        Email = createReservationDto.Email,
+                        FirstName = createReservationDto.FirstName ?? user!.FirstName,
+                        LastName = createReservationDto.LastName ?? user!.LastName,
+                        Email = createReservationDto.Email ?? user!.Email,
+                        //TotalPrice = createReservationDto.TotalPrice,
                         UserId = Guid.Parse(userId!),
                         Tickets = new List<Ticket>()
                     };
@@ -150,6 +152,25 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             {
                 _logger.LogError(ex, "Some error occurred while creating reservation." + ex.Message);
                 return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Failed("Some error occurred while creating reservation." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+            }
+        }
+
+        public async Task<ApiResponse<IEnumerable<TicketResponseDto>>> GetAllTicketsAsync()
+        {
+            try
+            {
+                using (Operation.Time("Time taken to get all tickets"))
+                {
+                    var tickets = await _ticketRepository.GetAllAsync();
+
+                    var ticketsDto = _mapper.Map<IEnumerable<TicketResponseDto>>(tickets);
+                    return ApiResponse<IEnumerable<TicketResponseDto>>.Success("All tickets retrieved succcessfully", StatusCodes.Status201Created, ticketsDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Some error occurred while retrieving tickets." + ex.Message);
+                return ApiResponse<IEnumerable<TicketResponseDto>>.Failed("Some error occurred while retrieving tickets." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
             }
         }
 
