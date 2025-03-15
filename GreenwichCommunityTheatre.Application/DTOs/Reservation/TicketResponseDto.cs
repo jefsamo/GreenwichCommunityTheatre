@@ -12,6 +12,7 @@ namespace GreenwichCommunityTheatre.Application.DTOs.Reservation
         public string? PlayId { get; set; }
         public string? SeatId { get; set; }
         public string FirstName { get; set; }
+        public string TicketCode { get; set; }
         public required string LastName { get; set; }
         public required bool HasCheckedIn { get; set; }
         public required DateOnly DateOfBirth { get; set; }

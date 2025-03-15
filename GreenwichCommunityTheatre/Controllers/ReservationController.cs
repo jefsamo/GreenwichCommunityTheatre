@@ -44,6 +44,48 @@ namespace GreenwichCommunityTheatre.Controllers
             return BadRequest(response);
         }
 
+        [HttpGet("reservations-user")]
+        [Authorize(Roles = "Operator, Customer")]
+        public async Task<IActionResult> GetAllReservationsByAUser()
+        {
+            var response = await _reservationService.GetAllReservationsByUserAsync();
+
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+        //GetAllTicketsByReservationIdAsync
+        [HttpGet("tickets-user/{id}")]
+        [Authorize(Roles = "Operator, Customer")]
+        public async Task<IActionResult> GetAllTicketsByReservationId(string id)
+        {
+            var response = await _reservationService.GetAllTicketsByReservationIdAsync(id);
+
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
+        [HttpGet("reservations")]
+        [Authorize(Roles = "Operator")]
+        public async Task<IActionResult> GetAllReservations()
+        {
+            var response = await _reservationService.GetAllReservationsAsync();
+
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
+
         [HttpPost("{id}/update")]
         [Authorize(Roles = "Operator")]
         [CustomAuthorizeFilter]
