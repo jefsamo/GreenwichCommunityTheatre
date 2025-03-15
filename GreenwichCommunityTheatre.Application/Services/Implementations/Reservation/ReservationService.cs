@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using GreenwichCommunityTheatre.Application.DTOs.Reservation;
-using GreenwichCommunityTheatre.Application.DTOs.Seat;
 using GreenwichCommunityTheatre.Application.Services.Interfaces.Reservation;
 using GreenwichCommunityTheatre.Domain;
 using GreenwichCommunityTheatre.Domain.Entities;
@@ -91,6 +90,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             }
         }
 
+        #region Create A Reservation
         public async Task<ApiResponse<ReservationResponseDto<TicketResponseDto>>> CreateReservationAsync(CreateReservationDto createReservationDto)
         {
             try
@@ -115,7 +115,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                         FirstName = createReservationDto.FirstName ?? user!.FirstName,
                         LastName = createReservationDto.LastName ?? user!.LastName,
                         Email = createReservationDto.Email ?? user!.Email,
-                        //TotalPrice = createReservationDto.TotalPrice,
+                        TotalPrice = createReservationDto.TotalPrice,
                         UserId = Guid.Parse(userId!),
                         Tickets = new List<Ticket>()
                     };
@@ -136,6 +136,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
 
                     var reservationResponse = new ReservationResponseDto<TicketResponseDto>
                     {
+                        Id = reservation.Id,
                         FirstName = reservation.FirstName,
                         LastName = reservation.LastName,
                         Email = reservation.Email,
@@ -155,6 +156,41 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             }
         }
 
+        #endregion
+
+
+        public async Task<ApiResponse<IEnumerable<ReservationResponseDto<TicketResponseDto>>>> GetAllReservationsAsync()
+        {
+            try
+            {
+                var reservations = await _reservationRepository.GetAllAsync();
+                var reservationsDto = _mapper.Map<IEnumerable<ReservationResponseDto<TicketResponseDto>>>(reservations);
+               
+                //var reservationsDto = reservations.Select(reservation => new ReservationResponseDto<TicketResponseDto>
+                //{
+                //    Id = reservation.Id.ToString(),
+                //    FirstName = reservation.FirstName,
+                //    LastName = reservation.LastName,
+                //    UserId = reservation.UserId,
+                //    Email = reservation.Email,
+                //    HasPaid = reservation.HasPaid,
+                //    CreatedAt = reservation.CreatedAt,
+                //    UpdatedAt = reservation.UpdatedAt,
+                //    Tickets = _mapper.Map<List<TicketResponseDto>>(reservation.Tickets
+                //                    .Where(ticket => ticket.ReservationId == reservation.Id)) // Filter tickets
+                //}).ToList();
+
+                return ApiResponse<IEnumerable<ReservationResponseDto<TicketResponseDto>>>.Success("Reservations retrieved successfully", StatusCodes.Status200OK, reservationsDto);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Some error occurred while retrieving reservations." + ex.Message);
+                return ApiResponse<IEnumerable<ReservationResponseDto<TicketResponseDto>>>.Failed("Some error occurred while retrieving reservations." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+            }
+
+        }
+
         public async Task<ApiResponse<IEnumerable<TicketResponseDto>>> GetAllTicketsAsync()
         {
             try
@@ -171,6 +207,49 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             {
                 _logger.LogError(ex, "Some error occurred while retrieving tickets." + ex.Message);
                 return ApiResponse<IEnumerable<TicketResponseDto>>.Failed("Some error occurred while retrieving tickets." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+            }
+        }
+        public async Task<ApiResponse<IEnumerable<TicketResponseDto>>> GetAllTicketsByReservationIdAsync(string id)
+        {
+            try
+            {
+                using (Operation.Time("Time taken to get all tickets by reservation id"))
+                {
+                    //var currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                    //var reservations = await _reservationRepository.GetAllAsync(r => r.UserId.ToString() == currentUserId);
+                    //var firstReservation = reservations.FirstOrDefault(); // Gets the first item or null if empty
+                    var tickets = await _ticketRepository.GetAllAsync(t => t.ReservationId == id);
+
+                    var ticketsDto = _mapper.Map<IEnumerable<TicketResponseDto>>(tickets);
+                    return ApiResponse<IEnumerable<TicketResponseDto>>.Success("All tickets by reservation id retrieved succcessfully", StatusCodes.Status201Created, ticketsDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Some error occurred while retrieving tickets." + ex.Message);
+                return ApiResponse<IEnumerable<TicketResponseDto>>.Failed("Some error occurred while retrieving tickets." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
+            }
+        }
+
+        public async Task<ApiResponse<IEnumerable<ReservationResponseDto<TicketResponseDto>>>> GetAllReservationsByUserAsync()
+        {
+            try
+            {
+                using (Operation.Time("Time taken to get all reservations by a user"))
+                {
+                    var currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                    var reservations = await _reservationRepository.GetAllAsync(r => r.UserId.ToString() == currentUserId);
+                    var reservationsDto = _mapper.Map<IEnumerable<ReservationResponseDto<TicketResponseDto>>>(reservations);
+
+                    return ApiResponse<IEnumerable<ReservationResponseDto<TicketResponseDto>>>.Success("Reservations retrieved successfully", StatusCodes.Status200OK, reservationsDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Some error occurred while retrieving tickets." + ex.Message);
+                return ApiResponse<IEnumerable<ReservationResponseDto<TicketResponseDto>>>.Failed("Some error occurred while retrieving tickets." + ex.Message, StatusCodes.Status500InternalServerError, new List<string>() { ex.Message });
             }
         }
 
@@ -256,7 +335,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             {
                 using (Operation.Time("Time taken to update a reservation HasPaid property"))
                 {
-                    var reservation = await _reservationRepository.GetByIdAsync(id);
+                    var reservation = await _reservationRepository.GetByIdAsync(id)!;
                     if (reservation is null)
                     {
                         return ApiResponse<ReservationResponseDto<TicketResponseDto>>.Failed("Reservation not found", StatusCodes.Status404NotFound, []);

@@ -23,9 +23,9 @@ namespace GreenwichCommunityTheatre.Mapper
             CreateMap<Seat, SeatResponseDto>().ReverseMap();
             CreateMap<Seat, UpdateSeatDto>().ReverseMap();
 
-            CreateMap<Reservation, ReservationResponseDto<ReservationTicketResponseDto>>()
-                .ForMember(dest => dest.Tickets, opt => opt.MapFrom(src => src.Tickets)) // Map Tickets
-                .ReverseMap();
+            //CreateMap<Reservation, ReservationResponseDto<ReservationTicketResponseDto>>()
+            //    .ForMember(dest => dest.Tickets, opt => opt.MapFrom(src => src.Tickets)) // Map Tickets
+            //    .ReverseMap();
 
             CreateMap<Reservation, ReservationResponseDto<TicketResponseDto>>()
                .ForMember(dest => dest.Tickets, opt => opt.MapFrom(src => src.Tickets)) // Map Tickets
@@ -34,6 +34,7 @@ namespace GreenwichCommunityTheatre.Mapper
             CreateMap<Ticket, ReservationTicketResponseDto>().ReverseMap();
             CreateMap<Ticket, TicketResponseDto>().ReverseMap();
             CreateMap<Ticket, TicketDto>().ReverseMap();
+            CreateMap<Reservation, TicketResponseDto>().ReverseMap();
 
             CreateMap<Review, ReviewResponseDto>().ReverseMap();
             CreateMap<Review, CreateReviewDto>().ReverseMap();

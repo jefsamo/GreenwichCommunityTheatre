@@ -36,7 +36,7 @@ namespace GreenwichCommunityTheatre.Infrastructure.Context
             modelBuilder.Entity<Play>().HasMany(p => p.Reviews).WithOne(p => p.Play).HasForeignKey(p => p.PlayId).IsRequired();
 
 
-            SeedData<Review>(modelBuilder,"reviews.json");
+            //SeedData<Review>(modelBuilder,"reviews.json");
             SeedData<Seat>(modelBuilder, "seats.json");
             SeedData<Play>(modelBuilder, "plays.json");
         }

@@ -1,4 +1,6 @@
 using GreenwichCommunityTheatre.Extensions;
+using GreenwichCommunityTheatre.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Text.Json;
 
@@ -17,6 +19,17 @@ builder.Services.AddDependencies(builder.Configuration);
 builder.Services.AddSwagger();
 
 var app = builder.Build();
+
+try
+{
+    var context = app.Services.GetRequiredService<GctDbContext>();
+    context.Database.EnsureCreated();
+    context.Database.Migrate();
+}
+catch (Exception ex)
+{
+
+}
 
 app.UseSerilogRequestLogging();
 
@@ -45,7 +58,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(p => p.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+
+app.UseCors(p => p.WithOrigins("http://localhost:5173", "https://gct-lime.vercel.app").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+//app.UseCors(p => p.WithOrigins("http://localhost:5174", "https://gct-lime.vercel.app").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 
 app.UseHttpsRedirection();
 app.UseRouting();
