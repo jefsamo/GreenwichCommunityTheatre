@@ -3,22 +3,18 @@ using GreenwichCommunityTheatre.Application.DTOs.Reservation;
 using GreenwichCommunityTheatre.Application.Services.Interfaces.Reservation;
 using GreenwichCommunityTheatre.Domain;
 using GreenwichCommunityTheatre.Domain.Entities;
-using GreenwichCommunityTheatre.Infrastructure.Context;
 using GreenwichCommunityTheatre.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using SerilogTimings;
 using System.Security.Claims;
-using System.Text;
-
 
 namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reservation
 {
     public class ReservationService : IReservationService
     {
         private readonly IMapper _mapper;
-        private readonly GctDbContext _gctDbContext;
         private readonly ILogger<ReservationService> _logger;
         private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Play> _playRepository;
         private readonly IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Reservation> _reservationRepository;
@@ -27,11 +23,10 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<User> _userManager;
 
-        public ReservationService(IMapper mapper, GctDbContext gctDbContext, ILogger<ReservationService> logger, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Reservation> reservationRepository,
+        public ReservationService(IMapper mapper, ILogger<ReservationService> logger, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Reservation> reservationRepository,
             IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Ticket> ticketRepository, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Play> playRepository, IGenericRepository<GreenwichCommunityTheatre.Domain.Entities.Seat> seatRepository, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
         {
             _mapper = mapper;
-            _gctDbContext = gctDbContext;
             _logger = logger;
             _reservationRepository = reservationRepository;
             _ticketRepository = ticketRepository;
@@ -128,7 +123,7 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
                     foreach (var ticket in ticketEntities)
                     {
                         ticket.ReservationId = reservation.Id;
-                        ticket.TicketCode = GenerateTicketCode();
+                        ticket.TicketCode = TicketCodeGenerator.GenerateTicketCode();
                     }
 
                     await _ticketRepository.AddRangeAsync(ticketEntities);
@@ -380,18 +375,18 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Reserva
             }
         }
 
-        private string GenerateTicketCode(int length = 5)
-        {
-            const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        //private string GenerateTicketCode(int length = 5)
+        //{
+        //    const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-            StringBuilder result = new(length);
+        //    StringBuilder result = new(length);
 
-            for (int i = 0; i < length; i++)
-            {
-                result.Append(Chars[Random.Shared.Next(Chars.Length)]);
-            }
+        //    for (int i = 0; i < length; i++)
+        //    {
+        //        result.Append(Chars[Random.Shared.Next(Chars.Length)]);
+        //    }
 
-            return $"GCT_{result?.ToString()}";
-        }
+        //    return $"GCT_{result?.ToString()}";
+        //}
     }
 }
