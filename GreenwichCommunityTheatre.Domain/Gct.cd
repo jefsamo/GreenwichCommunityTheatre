@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="GreenwichCommunityTheatre.Domain.Entities.Play">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAQEAAAQAgAUAAAgAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Entities\Play.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Domain.Entities.BaseEntity">
+    <Position X="3.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAACAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\BaseEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Domain.Entities.Reservation">
+    <Position X="7" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAEAAgCAAAAAAAAAAAAgAAAAAQAQAAAAAAAAAAAg=</HashCode>
+      <FileName>Entities\Reservation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Domain.Entities.Review">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAEAAAAAAAAAAAAAAgAAAAAAAEAgAAAAAAAEAA=</HashCode>
+      <FileName>Entities\Review.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Domain.Entities.Role">
+    <Position X="10" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Role.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Domain.Entities.Seat">
+    <Position X="6" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAQAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Seat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Domain.Entities.Ticket">
+    <Position X="0.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAABAAAAEAAARAAAAAAQAAAAgIAAAAAAEAg=</HashCode>
+      <FileName>Entities\Ticket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Domain.Entities.User">
+    <Position X="9.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAACAAAECAAAAAAAAAAAAAAAAQAAAAAAAg=</HashCode>
+      <FileName>Entities\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

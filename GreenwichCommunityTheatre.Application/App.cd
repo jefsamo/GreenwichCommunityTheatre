@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="GreenwichCommunityTheatre.Application.Services.Implementations.Play.PlayService">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAIAABAAAAIIAAAAAAAAAAQIACIAA=</HashCode>
+      <FileName>Services\Implementations\Play\PlayService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Application.Services.Implementations.Reservation.ReservationService">
+    <Position X="2.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIQABAIgAJAQAAAAIAABAgAAIAgAAAABACAAAAACIIA=</HashCode>
+      <FileName>Services\Implementations\Reservation\ReservationService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Application.Services.Implementations.Review.ReviewService">
+    <Position X="5.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CAAABAAAQBAAAAAAIAABAAAAIAACAAACAAAAAEACBAA=</HashCode>
+      <FileName>Services\Implementations\Review\ReviewService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Application.Services.Implementations.Seat.SeatService">
+    <Position X="7.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAABAAAAAAAABAAAAIAAAAAUIAAAAAAACAAQ=</HashCode>
+      <FileName>Services\Implementations\Seat\SeatService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Application.Services.Implementations.Auth.JwtService">
+    <Position X="10.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAgAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Services\Implementations\Auth\JwtService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GreenwichCommunityTheatre.Application.Services.Implementations.Auth.AuthService">
+    <Position X="12.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AgAABAAAAAAAAAAAAABBAAAiIAAAAAAgAABAAAACAAA=</HashCode>
+      <FileName>Services\Implementations\Auth\AuthService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="GreenwichCommunityTheatre.Application.Services.Interfaces.Review.IReviewService">
+    <Position X="5.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAABAAAAAAAAAAAAAAAAAAAAAACAAACAAAAAEAABAA=</HashCode>
+      <FileName>Services\Interfaces\Review\IReviewService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GreenwichCommunityTheatre.Application.Services.Interfaces.Seat.ISeatService">
+    <Position X="8" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAUIAAAAAAAAAAQ=</HashCode>
+      <FileName>Services\Interfaces\Seat\ISeatService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GreenwichCommunityTheatre.Application.Services.Interfaces.Reservation.IReservationService">
+    <Position X="3" Y="5.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAIgAIAAAAAAAAAAAgAAAAgAAAAAACAAAAAAIAA=</HashCode>
+      <FileName>Services\Interfaces\Reservation\IReservationService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GreenwichCommunityTheatre.Application.Services.Interfaces.Auth.IAuthService">
+    <Position X="13" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Interfaces\Auth\IAuthService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GreenwichCommunityTheatre.Application.Services.Interfaces.Auth.IJwtService">
+    <Position X="10.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Interfaces\Auth\IJwtService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GreenwichCommunityTheatre.Application.Services.Interfaces.Play.IPlayService">
+    <Position X="0.5" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAIAAAAAAAAAAQIAAIAA=</HashCode>
+      <FileName>Services\Interfaces\Play\IPlayService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

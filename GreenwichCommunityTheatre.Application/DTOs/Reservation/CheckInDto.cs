@@ -8,6 +8,6 @@ namespace GreenwichCommunityTheatre.Application.DTOs.Reservation
 {
     public class CheckInDto
     {
-        public required string TicketCode { get; set; } 
+        public required string TicketCode { get; set; }
     }
 }
