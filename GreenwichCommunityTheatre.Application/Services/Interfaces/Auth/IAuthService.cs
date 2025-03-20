@@ -12,5 +12,6 @@ namespace GreenwichCommunityTheatre.Application.Services.Interfaces.Auth
     {
         Task<ApiResponse<LoginResponseDto>> LoginAsync(LoginDto loginDto);
         Task<ApiResponse<RegisterResponseDto>> RegisterAsync(RegisterDto registerDto);
+        Task<ApiResponse<RegisterResponseDto>> FindUserByIdAsync(string id);
     }
 }

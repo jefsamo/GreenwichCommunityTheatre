@@ -37,6 +37,31 @@ namespace GreenwichCommunityTheatre.Application.Services.Implementations.Auth
             _jwtService = jwtService;
             _diagnosticContext = diagnosticContext;
         }
+
+        public async Task<ApiResponse<RegisterResponseDto>> FindUserByIdAsync(string id)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id);
+                if (user == null)
+                {
+                    return ApiResponse<RegisterResponseDto>.Failed("User not found.", StatusCodes.Status404NotFound, new List<string>());
+                }
+
+                var roles = await _userManager.GetRolesAsync(user);
+                var userResponse = _mapper.Map<RegisterResponseDto>(user);
+                userResponse.Role = roles.FirstOrDefault() ?? "Customer";
+
+                return ApiResponse<RegisterResponseDto>.Success("User retrieved successfully", StatusCodes.Status200OK, userResponse);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving user.");
+                return ApiResponse<RegisterResponseDto>.Failed("An error occurred while retrieving user.", StatusCodes.Status500InternalServerError, new List<string> { ex.Message });
+            }
+        }
+
+
         public async Task<ApiResponse<LoginResponseDto>> LoginAsync(LoginDto loginDto)
         {
             try
