@@ -31,6 +31,19 @@ namespace GreenwichCommunityTheatre.Controllers
 
             return BadRequest(response);
         }
+        //[Authorize(Roles = "Operator, Customer")]
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> FindUserById(string id)
+        {
+            var response = await _authService.FindUserByIdAsync(id);
+
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
+        }
 
         [Authorize(Roles = "Operator")]
         [HttpPost("register")]
